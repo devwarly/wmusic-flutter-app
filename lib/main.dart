@@ -1,121 +1,184 @@
 import 'package:flutter/material.dart';
+import 'package:music_player_app/features/home/presentation/widgets/bottom_player_navigation_bar.dart';
+import 'package:music_player_app/features/music_player/domain/music_model.dart';
+import 'package:music_player_app/features/playlists/domain/models/playlist_model.dart';
+import 'package:music_player_app/features/home/presentation/widgets/recent_playlists_section.dart';
+import 'package:music_player_app/musics_section.dart';
+import 'package:music_player_app/search-header.dart';
+
+// Mocks de dados
+final mockPlaylists = [
+  const PlaylistModel(
+    id: '1',
+    title: 'Tudo em um',
+    songCount: 28,
+    imageUrl: 'https://akamai.sscdn.co/uploadfile/letras/fotos/4/9/a/7/49a76871d4af26393bac3f97402b766b.jpg',
+  ),
+  const PlaylistModel(
+    id: '2',
+    title: 'Modão sertanejo - As melhores',
+    songCount: 105,
+    imageUrl: 'https://picsum.photos/201',
+  ),
+  const PlaylistModel(
+    id: '3',
+    title: 'Henrique & Juliano - Manifesto musical',
+    songCount: 67,
+    imageUrl: 'https://cdn.jornaldebrasilia.com.br/wp-content/uploads/2023/04/20155950/HJ-capa-TO-BE-EP-3-1-scaled.jpg',
+  ),
+  const PlaylistModel(
+    id: '4',
+    title: 'Forró Raiz',
+    songCount: 124,
+    imageUrl: 'https://picsum.photos/203',
+  ),
+];
+
+final mockMusics = [
+  const MusicModel(
+    id: '1',
+    title: 'Título da Música 1',
+    artist: 'Nome do Artista',
+    duration: Duration(minutes: 3, seconds: 20),
+    imageUrl: 'https://picsum.photos/200',
+  ),
+  const MusicModel(
+    id: '2',
+    title: 'Título da Música 2',
+    artist: 'Nome do Artista',
+    duration: Duration(minutes: 2, seconds: 45),
+    imageUrl: 'https://picsum.photos/201',
+  ),
+
+  const MusicModel(
+    id: '3',
+    title: 'Bem',
+    artist: 'Chapéu de Palha',
+    duration: Duration(minutes: 4, seconds: 30),
+    imageUrl: 'https://akamai.sscdn.co/uploadfile/letras/fotos/4/9/a/7/49a76871d4af26393bac3f97402b766b.jpg',
+  ),
+
+  const MusicModel(
+    id: '4',
+    title: 'Título da Música 2',
+    artist: 'Nome do Artista',
+    duration: Duration(minutes: 2, seconds: 45),
+    imageUrl: 'https://picsum.photos/204',
+  ),
+
+  const MusicModel(
+    id: '5',
+    title: 'Título da Música 2',
+    artist: 'Nome do Artista',
+    duration: Duration(minutes: 2, seconds: 45),
+    imageUrl: 'https://picsum.photos/205',
+  ),
+
+  const MusicModel(
+    id: '6',
+    title: 'Título da Música 2',
+    artist: 'Nome do Artista',
+    duration: Duration(minutes: 2, seconds: 45),
+    imageUrl: 'https://picsum.photos/201',
+  ),
+];
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MusicApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MusicApp extends StatelessWidget {
+  const MusicApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Music Player',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF101216),
+        fontFamily: 'Roboto',
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const HomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _HomePageState extends State<HomePage> {
+  int _selectedTab = 0;
+  bool _isPlaying = true;
+  MusicModel? _currentPlaying;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  @override
+  void initState() {
+    super.initState();
+    // Define a primeira música do mock como a música atual ao iniciar
+    if (mockMusics.isNotEmpty) {
+      _currentPlaying = mockMusics.first;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SearchHeader(),
+              const SizedBox(height: 24),
+              RecentPlaylistsSection(
+                playlists: mockPlaylists,
+                onPlaylistTap: (playlist) {
+                  // Ação ao clicar na playlist
+                },
+              ),
+              const SizedBox(height: 24),
+              MusicsSection(
+                musics: mockMusics,
+                onMusicTap: (music) {
+                  setState(() {
+                    _currentPlaying = music;
+                    _isPlaying = true;
+                  });
+                },
+              ),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      bottomNavigationBar: BottomPlayerNavigationBar(
+        currentMusic: _currentPlaying,
+        isPlaying: _isPlaying,
+        progress: 0.4,
+        currentTabIndex: _selectedTab,
+        userAvatarUrl: 'https://picsum.photos/100',
+        onTabSelected: (index) {
+          setState(() {
+            _selectedTab = index;
+          });
+        },
+        onPlayPause: () {
+          setState(() {
+            _isPlaying = !_isPlaying;
+          });
+        },
+        onNext: () {
+          // Lógica de próxima música
+        },
+        onPrevious: () {
+          // Lógica de música anterior
+        },
       ),
     );
   }

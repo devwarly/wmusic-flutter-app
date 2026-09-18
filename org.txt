@@ -1,0 +1,49 @@
+lib/
+├── core/
+│   ├── constants/
+│   │   ├── app_colors.dart        # Cores (Background escuro, Azul de destaque, etc.)
+│   │   └── app_breakpoints.dart   # Definidores de largura (Mobile: < 800px)
+│   ├── theme/
+│   │   └── app_theme.dart         # ThemeData Dark do projeto
+│   └── widgets/
+│       ├── custom_search_bar.dart # Barra de busca reutilizável
+│       └── playlist_card.dart     # Cards da seção "Playlists Recentes"
+├── features/
+│   ├── home/
+│   │   └── presentation/
+│   │       ├── screens/
+│   │       │   ├── responsive_home_screen.dart # Switch entre Mobile/Desktop
+│   │       │   ├── mobile_home_content.dart
+│   │       │   └── desktop_home_content.dart
+│   │       └── widgets/
+│   │           ├── desktop_sidebar.dart        # Menu lateral esquerdo
+│   │           └── mobile_bottom_nav.dart      # Navegação inferior
+│   ├── music_player/
+│   │   ├── domain/               # Entidades de Música e Playlist
+│   │   ├── presentation/
+│   │   │   ├── controllers/      # Bloc/Cubit do estado da música
+│   │   │   └── widgets/
+│   │   │       ├── mini_player_bar.dart        # Player fixo do Mobile
+│   │   │       └── desktop_player_panel.dart   # Painel lateral direito (Capa + Controles)
+│   └── music_list/
+│       └── presentation/
+│           └── widgets/
+│               └── music_tile.dart             # Item da lista de músicas
+└── main.dart
+
+
+---------------------------------
+
+Execute o Flutter liberando o host
+Rode o aplicativo usando o dispositivo web-server e defina o hostname como 0.0.0.0. Isso diz ao Flutter para aceitar conexões de qualquer dispositivo na sua rede local:
+
+PowerShell
+flutter run -d web-server --web-hostname 0.0.0.0 --web-port 8080
+Acesse no iPhone
+
+Certifique-se de que o iPhone e o computador estão conectados na mesma rede Wi-Fi.
+
+Abra o Safari ou o Chrome no iPhone e digite a URL usando o IP que você anotou no passo 1 e a porta 8080:
+
+Plaintext
+http://SEU_ENDERECO_IPV4:8080
